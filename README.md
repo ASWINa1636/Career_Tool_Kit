@@ -70,3 +70,6 @@ Enter your choice:
 - **docx / docx2pdf** – Resume generation and export  
 - **datetime, re** – Text processing and logging
 
+-->License
+
+MIT License
