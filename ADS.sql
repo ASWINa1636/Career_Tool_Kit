@@ -1,0 +1,15 @@
+CREATE DATABASE IF NOT EXISTS career_toolkit;
+USE career_toolkit;
+
+CREATE TABLE IF NOT EXISTS resume_scans (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    file_path TEXT,
+    score INT,
+    scan_time DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS activity_log (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    action TEXT,
+    action_time DATETIME DEFAULT CURRENT_TIMESTAMP
+);
