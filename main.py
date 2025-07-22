@@ -11,6 +11,7 @@ from docx.shared import Pt
 from docx.shared import Inches
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 import re
+import os
 
 # Connect to MySQL database
 conn = mysql.connector.connect(
@@ -324,8 +325,11 @@ def resume_creator():
                 doc.add_paragraph(c, style='List Bullet') 
 
             filename = input("Enter filename (without extension): ").strip()
-            # BEFORE USING THIS CODE UPDATE YOUR PATH SECTION
-            save_path = f"D:/Carrer_toolKit/resume/{filename}.docx"
+            # Create resume folder if it doesn't exist
+            resume_folder = "D:/Carrer_toolKit/resume"
+            os.makedirs(resume_folder, exist_ok=True)
+            
+            save_path = os.path.join(resume_folder, f"{filename}.docx")
 
             #Introducing hyperlink
             def add_hyperlink(paragraph, url, text):

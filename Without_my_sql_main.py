@@ -10,6 +10,7 @@ from docx.shared import Pt
 from docx.shared import Inches
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 import re
+import os
 
 
 def extract_text_from_file(file_path):
@@ -170,6 +171,27 @@ def resume_creator():
             contact_para.paragraph_format.space_after = Pt(6)
             contact_para.add_run(f"{phone} | {email}")
 
+            #Introducing hyperlink
+            def add_hyperlink(paragraph, url, text):
+                    part = paragraph.part
+                    r_id = part.relate_to(url, "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink", is_external=True)
+                    hyperlink = OxmlElement("w:hyperlink")
+                    hyperlink.set(qn("r:id"), r_id)
+                    new_run = OxmlElement("w:r")
+                    rPr = OxmlElement("w:rPr")
+                    color = OxmlElement("w:color")
+                    color.set(qn("w:val"), "0000FF")
+                    rPr.append(color)
+                    underline = OxmlElement("w:u")
+                    underline.set(qn("w:val"), "single")
+                    rPr.append(underline)
+                    new_run.append(rPr)
+                    t = OxmlElement("w:t")
+                    t.text = text
+                    new_run.append(t)
+                    hyperlink.append(new_run)
+                    paragraph._p.append(hyperlink)
+
             if github.lower() != 'skip':
                 contact_para.add_run(" | ")
                 add_hyperlink(contact_para, github, "GitHub")
@@ -288,29 +310,12 @@ def resume_creator():
                 doc.add_paragraph(c, style='List Bullet') 
 
             filename = input("Enter filename (without extension): ").strip()
-            # BEFORE USING THIS CODE UPDATE YOUR PATH SECTION
-            save_path = f"D:/Carrer_toolKit/resume/{filename}.docx"
-
-            #Introducing hyperlink
-            def add_hyperlink(paragraph, url, text):
-                    part = paragraph.part
-                    r_id = part.relate_to(url, "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink", is_external=True)
-                    hyperlink = OxmlElement("w:hyperlink")
-                    hyperlink.set(qn("r:id"), r_id)
-                    new_run = OxmlElement("w:r")
-                    rPr = OxmlElement("w:rPr")
-                    color = OxmlElement("w:color")
-                    color.set(qn("w:val"), "0000FF")
-                    rPr.append(color)
-                    underline = OxmlElement("w:u")
-                    underline.set(qn("w:val"), "single")
-                    rPr.append(underline)
-                    new_run.append(rPr)
-                    t = OxmlElement("w:t")
-                    t.text = text
-                    new_run.append(t)
-                    hyperlink.append(new_run)
-                    paragraph._p.append(hyperlink)
+            
+            # Create resume folder if it doesn't exist
+            resume_folder = "D:/Carrer_toolKit/resume"
+            os.makedirs(resume_folder, exist_ok=True)
+            
+            save_path = os.path.join(resume_folder, f"{filename}.docx")
 
             doc.save(save_path)
             convert(save_path)
